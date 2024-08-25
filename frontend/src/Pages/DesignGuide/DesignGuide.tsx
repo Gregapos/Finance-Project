@@ -20,7 +20,7 @@ const DesignGuide = (props: Props) => {
         components of the app with brief instructions on how to use them.
       </h1>
       <RatioList data={testIncomeStatementData} config={tableConfig} />
-      <Table />
+      <Table data={testIncomeStatementData} config={tableConfig} />
       <h3>
         Table - Table takes in a configuration object and company data as
         params. Use the config to style your table.

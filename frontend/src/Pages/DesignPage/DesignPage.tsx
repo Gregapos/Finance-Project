@@ -11,7 +11,7 @@ const DesignPage = (props: Props) => {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi quasi
         harum nostrum, quibusdam non rerum aut aliquid vero error blanditiis?
       </h2>
-      <Table />
+      {/* <Table /> */}
     </>
   );
 };
