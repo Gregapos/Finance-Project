@@ -1,0 +1,11 @@
+# Build Folders
+bin/**
+obj/** 
+
+# Visual Studio Code
+.vscode/
+.vscode/**
+
+# NuGet
+*.nupkg
+**/packages/*
