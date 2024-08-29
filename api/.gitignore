@@ -1,6 +1,6 @@
 # Build Folders
-bin/**
-obj/** 
+bin/
+obj/
 
 # Visual Studio Code
 .vscode/
@@ -9,3 +9,6 @@ obj/**
 # NuGet
 *.nupkg
 **/packages/*
+
+# Entity Framework Migrations
+Migrations/
