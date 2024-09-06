@@ -5,10 +5,12 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using api.DTOs.Comment;
 using api.Extensions;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using api.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +24,7 @@ namespace api.Controllers
         private readonly IStockRepository _stockRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IFMPService _fmpService;
-        public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository, UserManager<AppUser> userManager, FMPService fMPService)
+        public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository, UserManager<AppUser> userManager, IFMPService fMPService)
         {
             _commentRepository = commentRepository;
             _stockRepository = stockRepository;
@@ -31,12 +33,18 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [Authorize]
+        public async Task<IActionResult> GetAll([FromQuery] CommentQueryObject queryObject)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comments = await _commentRepository.GetAllAsync();
+            var comments = await _commentRepository.GetAllAsync(queryObject);
+
+            if (comments == null)
+            {
+                return NotFound();
+            }
 
             var commentDto = comments.Select(s => s.ToCommentDto());
 
