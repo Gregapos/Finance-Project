@@ -23,10 +23,16 @@ const StockCommentForm = ({ symbol, handleComment }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CommentFormInputs>({ resolver: yupResolver(validation) });
 
+  const onSubmit = (e: CommentFormInputs) => {
+    handleComment(e);
+    reset();
+  };
+
   return (
-    <form className="mt-4 ml-4" onSubmit={handleSubmit(handleComment)}>
+    <form className="mt-4 ml-4" onSubmit={handleSubmit(onSubmit)}>
       <input
         type="text"
         id="title"
