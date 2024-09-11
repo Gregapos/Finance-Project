@@ -39,15 +39,12 @@ const StockComment = ({ stockSymbol }: Props) => {
 
   const getComments = () => {
     setLoading(true);
-    try {
-      commentGetAPI(stockSymbol).then((res) => {
-        setLoading(false);
-        setComment(res?.data!);
-      });
-    } catch (error) {
-      handleError(error);
-    }
+    commentGetAPI(stockSymbol).then((res) => {
+      setLoading(false);
+      setComment(res?.data!);
+    });
   };
+
   return (
     <div className="flex flex-col">
       {loading ? <Spinner /> : <StockCommentList comments={comments!} />}

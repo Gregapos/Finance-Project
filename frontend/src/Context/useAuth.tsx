@@ -64,14 +64,18 @@ export const UserProvider = ({ children }: Props) => {
     await loginAPI(username, password)
       .then((res) => {
         if (res) {
-          localStorage.setItem("token", res?.data.token);
+          const newToken = res?.data.token;
+          localStorage.setItem("token", newToken);
           const userObj = {
             userName: res?.data.userName,
             email: res?.data.email,
           };
           localStorage.setItem("user", JSON.stringify(userObj));
-          setToken(res?.data.token!);
+          setToken(newToken);
           setUser(userObj!);
+
+          axios.defaults.headers.common["Authorization"] = "Bearer " + newToken;
+
           toast.success("Login Success!");
           navigate("/search");
         }
