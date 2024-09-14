@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@azure/static-web-apps-cli": "^2.0.1",
     "@types/axios": "^0.14.0",
     "@types/uuid": "^10.0.0",
     "tailwindcss": "^3.4.10"

@@ -11,6 +11,13 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load appsettings based on the environment
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
@@ -77,16 +84,27 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])),
+        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!)),
     };
 });
 
 var connectionStringTemplate = builder.Configuration.GetConnectionString("DefaultConnection");
-var machineName = Environment.MachineName;
-var connectionString = connectionStringTemplate?.Replace("{ServerName}", machineName);
+if (builder.Environment.EnvironmentName.Equals("Development"))
+{
+    var machineName = Environment.MachineName;
+    connectionStringTemplate = connectionStringTemplate?.Replace("{ServerName}", machineName);
+}
+
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+    options.UseSqlServer(connectionStringTemplate, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,        // Retry up to 5 times
+            maxRetryDelay: TimeSpan.FromSeconds(30),  // 30 seconds between retries
+            errorNumbersToAdd: null  // Optionally specify SQL error numbers to retry on
+        );
+    });
 });
 
 builder.Services.AddScoped<IStockRepository, StockRepository>();

@@ -1,6 +1,7 @@
-# Build Folders
+# Build & Publish Folders
 bin/
 obj/
+publish/
 
 # Visual Studio Code
 .vscode/
@@ -12,3 +13,7 @@ obj/
 
 # Entity Framework Migrations
 Migrations/
+
+# Appsettings
+appsettings.Development.json
+appsettings.Azure.json
